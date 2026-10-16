@@ -14,7 +14,8 @@
  *   --theme <t>        light | dark | both（默认 both）
  *   --width <n>        画布宽，默认 1280
  *   --height <n>       画布高，默认 320
- *   --monogram         画圆形首字母徽标
+ *   --monogram         画圆形首字母徽标（--align center 时忽略）
+ *   --align <a>        left | center（默认 left）
  *   --font <family>    覆盖字体栈
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -22,7 +23,7 @@ import { dirname, resolve } from 'node:path';
 
 /* ---------- 参数 ---------- */
 function parseArgs(argv) {
-  const out = { theme: 'both', width: 1280, height: 320, accent: '#6d5efc', monogram: false };
+  const out = { theme: 'both', width: 1280, height: 320, accent: '#6d5efc', monogram: false, align: 'left' };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--monogram') { out.monogram = true; continue; }
@@ -153,11 +154,12 @@ function buildSvg(opts, mode) {
 
   const id = mode === 'light' ? 'l' : 'd';
 
-  // 文字起点
-  let textX = pad;
+  // 文字起点（center 模式：文字居中，装饰移到右上角，忽略 monogram）
+  const center = opts.align === 'center';
+  let textX = center ? Math.round(W / 2) : pad;
   const monoR = 42;
   let monogram = '';
-  if (opts.monogram) {
+  if (opts.monogram && !center) {
     const cx = pad + monoR, cy = H / 2;
     const initial = (String(opts.name || '?').trim()[0] || '?').toUpperCase();
     monogram = [
@@ -169,7 +171,7 @@ function buildSvg(opts, mode) {
     textX = cx + monoR + 44;
   }
 
-  const availW = W - textX - pad - 90; // 右侧给装饰留位置
+  const availW = center ? (W - 2 * pad - 120) : (W - textX - pad - 90);
   const hasTagline = !!(opts.tagline && String(opts.tagline).trim());
   const nameSize = fitSize(opts.name, availW, hasTagline ? 68 : 76, 34);
   const tagSize = hasTagline ? fitSize(opts.tagline, availW, 26, 16) : 0;
@@ -207,7 +209,8 @@ function buildSvg(opts, mode) {
   lines.push('  <circle cx="' + Math.round(W * 0.06) + '" cy="' + Math.round(H * 1.02) + '" r="' + Math.round(H * 0.62) + '" fill="url(#gl' + id + ')" />');
 
   // 右下角同心环装饰
-  const rcx = W - Math.round(H * 0.36), rcy = Math.round(H * 0.62);
+  const rcx = center ? W - Math.round(H * 0.24) : W - Math.round(H * 0.36);
+  const rcy = center ? Math.round(H * 0.26) : Math.round(H * 0.62);
   lines.push('  <g fill="none" stroke="' + rgb2hex(P.acc) + '" stroke-width="1.5">');
   lines.push('    <circle cx="' + rcx + '" cy="' + rcy + '" r="' + Math.round(H * 0.20) + '" opacity="' + P.ringOp + '" />');
   lines.push('    <circle cx="' + rcx + '" cy="' + rcy + '" r="' + Math.round(H * 0.31) + '" opacity="' + (P.ringOp * 0.6).toFixed(2) + '" />');
@@ -220,9 +223,10 @@ function buildSvg(opts, mode) {
   if (monogram) lines.push(monogram);
 
   // 文字
-  lines.push('  <text x="' + textX + '" y="' + nameY + '" font-family="' + esc(font) + '" font-size="' + nameSize + '" font-weight="650" fill="' + rgb2hex(ink) + '" letter-spacing="-0.5">' + esc(opts.name) + '</text>');
+  const anchor = center ? ' text-anchor="middle"' : '';
+  lines.push('  <text x="' + textX + '" y="' + nameY + '"' + anchor + ' font-family="' + esc(font) + '" font-size="' + nameSize + '" font-weight="650" fill="' + rgb2hex(ink) + '" letter-spacing="-0.5">' + esc(opts.name) + '</text>');
   if (hasTagline) {
-    lines.push('  <text x="' + textX + '" y="' + tagY + '" font-family="' + esc(font) + '" font-size="' + tagSize + '" font-weight="400" fill="' + rgb2hex(sub) + '">' + esc(opts.tagline) + '</text>');
+    lines.push('  <text x="' + textX + '" y="' + tagY + '"' + anchor + ' font-family="' + esc(font) + '" font-size="' + tagSize + '" font-weight="400" fill="' + rgb2hex(sub) + '">' + esc(opts.tagline) + '</text>');
   }
   lines.push('</svg>');
   return lines.join('\n') + '\n';
@@ -232,7 +236,7 @@ function buildSvg(opts, mode) {
 const opts = parseArgs(process.argv.slice(2));
 if (opts.help) {
   console.log('gen_banner.mjs — 生成 README 表头横幅 SVG');
-  console.log('用法: node scripts/gen_banner.mjs --name "项目名" [--tagline "..."] [--accent "#6d5efc"] [--out banner.svg] [--theme both] [--width 1280] [--height 320] [--monogram]');
+  console.log('用法: node scripts/gen_banner.mjs --name "项目名" [--tagline "..."] [--accent "#6d5efc"] [--out banner.svg] [--theme both] [--width 1280] [--height 320] [--monogram] [--align left|center]');
   process.exit(0);
 }
 if (!opts.name) { console.error('错误: 必须提供 --name'); process.exit(2); }
