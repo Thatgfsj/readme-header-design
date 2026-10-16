@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img" aria-labelledby="ttld" preserveAspectRatio="xMidYMid meet">
+  <title id="ttld">readme-header-design — 为项目设计、生成并校验一个优秀的 README 表头</title>
+  <defs>
+    <linearGradient id="bgd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0c18" />
+      <stop offset="0.55" stop-color="#201e4a" />
+      <stop offset="1" stop-color="#301b41" />
+    </linearGradient>
+    <linearGradient id="accd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#796bfc" />
+      <stop offset="1" stop-color="#df6bfc" />
+    </linearGradient>
+    <radialGradient id="gld" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6d5efc" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#6d5efc" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="gridd" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#2c2e38" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="1280" height="320" fill="url(#bgd)" />
+  <rect width="1280" height="320" fill="url(#gridd)" opacity="0.5" />
+  <circle cx="1101" cy="90" r="275" fill="url(#gld)" />
+  <circle cx="77" cy="326" r="198" fill="url(#gld)" />
+  <g fill="none" stroke="#796bfc" stroke-width="1.5">
+    <circle cx="1165" cy="198" r="64" opacity="0.28" />
+    <circle cx="1165" cy="198" r="99" opacity="0.17" />
+    <circle cx="1165" cy="198" r="134" opacity="0.10" />
+  </g>
+  <rect x="0" y="314" width="1280" height="6" fill="url(#accd)" />
+  <g>
+    <circle cx="114" cy="160" r="42" fill="url(#accd)" />
+    <text x="114" y="177" text-anchor="middle" font-family="ui-sans-serif, -apple-system, &#39;Segoe UI&#39;, Roboto, &#39;Helvetica Neue&#39;, Arial, &#39;Noto Sans SC&#39;, sans-serif" font-size="44" font-weight="700" fill="#ffffff">R</text>
+  </g>
+  <text x="200" y="148" font-family="ui-sans-serif, -apple-system, &#39;Segoe UI&#39;, Roboto, &#39;Helvetica Neue&#39;, Arial, &#39;Noto Sans SC&#39;, sans-serif" font-size="68" font-weight="650" fill="#e8e9f5" letter-spacing="-0.5">readme-header-design</text>
+  <text x="200" y="216" font-family="ui-sans-serif, -apple-system, &#39;Segoe UI&#39;, Roboto, &#39;Helvetica Neue&#39;, Arial, &#39;Noto Sans SC&#39;, sans-serif" font-size="26" font-weight="400" fill="#9b9fbe">为项目设计、生成并校验一个优秀的 README 表头</text>
+</svg>
